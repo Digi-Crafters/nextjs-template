@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma/client"
 }
 
 datasource db {
@@ -15,11 +14,34 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
-  name          String?
-  email         String   @unique
-  password      String   // hashed password
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  password  String
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Categories {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  imageUrl    String?
+  price       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  rating      String?
+  items       Items[]   // One-to-many: a category has many items
+}
+
+model Items {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  price       String?
+  imageUrl    String?
+  rating      String?
+  categoryId  String?     // Foreign key field (optional)
+  category    Categories? @relation(fields: [categoryId], references: [id])
 }
